@@ -61,6 +61,10 @@
       <Project>{E7B51438-3D79-4E75-B7FA-9F95D0170F0E}</Project>
       <Name>DataStatisticsLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExtractWeb\RealtimeData.csproj">
+      <Project>{d30dfb11-537d-4ef4-856c-f2a9b13e30fa}</Project>
+      <Name>RealtimeData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

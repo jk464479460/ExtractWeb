@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
 
 namespace ExtractValueData
 {
@@ -36,7 +37,18 @@ namespace ExtractValueData
             {
                 var rowData = item.Split(new string[] { "<td>", "</td><td class='tor bold'>" }, StringSplitOptions.RemoveEmptyEntries);
                 if (rowData.Length >= 2)
-                    daysData.Add(new DayData { Date = rowData[0], Val = Convert.ToDouble(rowData[1]) });
+                {
+                    try
+                    {
+                        daysData.Add(new DayData { Date = rowData[0], Val = Convert.ToDouble(rowData[1]) });
+                    }
+                    catch
+                    {
+
+                    }
+                    
+                }
+                    
             }
 
             return daysData;
@@ -51,14 +63,22 @@ namespace ExtractValueData
 
         private string DownLoadString(string url)
         {
-            WebClient wc = new WebClient();
-            var st = wc.OpenRead(url);
-            var sr = new StreamReader(st);
-            string res = sr.ReadToEnd();
-            sr.Close();
-            st.Close();
+            try
+            {
+                WebClient wc = new WebClient();
+                var st = wc.OpenRead(url);
+                var sr = new StreamReader(st);
+                string res = sr.ReadToEnd();
+                sr.Close();
+                st.Close();
 
-            return res;
+                return res;
+            }catch
+            {
+                Thread.Sleep(1000*(10+DateTime.Now.Second));
+                return DownLoadString(url);
+            }
+            
         }
 
         private string GetHtmBody(string page, string per, string sdate, string edate)
@@ -88,5 +108,7 @@ namespace ExtractValueData
 
             return new Tuple<int, int>(records, pages);
         }
+
+        
     }
 }
