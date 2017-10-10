@@ -29,7 +29,15 @@ namespace TopRankCodeList
         {
             var url = ConfigurationManager.AppSettings["Url"];
             var top = new TopRank(url);
-            var codeList = top.GetCodeList();
+            var markcode = ConfigurationManager.AppSettings["MarkCode"];
+            var codeList = new List<TopResult>();
+            if (string.IsNullOrEmpty(markcode))
+            codeList = top.GetCodeList().ToList();
+            else
+            {
+                var arr = markcode.Split(',');
+                codeList.AddRange(arr.Select(x => new TopResult { Code = x, Name = "" }));
+            }
 
             var urlHistory = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz";
             var index = codeList.Count;
