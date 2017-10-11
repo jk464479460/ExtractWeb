@@ -52,26 +52,26 @@ namespace TopRankCodeList
                 var resVal = ProcessWeb.GetHtmlElementById("gz_gsz", "http://fund.eastmoney.com/"+code.Code+".html");
                 ConsoleEx.Write(true, resVal);
                 ConsoleEx.Write(true," One Month\n");
-                Output(daysData, code);
+                Output(daysData, code, resVal);
 
                 daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-3).ToString("yyyy-MM-dd"), edate);
                 ConsoleEx.Write(true,"3 Month\n");
-                Output(daysData, code);
+                Output(daysData, code, resVal);
 
                 daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-6).ToString("yyyy-MM-dd"), edate);
                 ConsoleEx.Write(true, "6 Month\n");
-                Output(daysData, code);
+                Output(daysData, code, resVal);
 
                 daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-12).ToString("yyyy-MM-dd"), edate);
                 ConsoleEx.Write(true,"12 Month\n");
-                Output(daysData, code);
+                Output(daysData, code, resVal);
                 Thread.Sleep(1000*DateTime.Now.Second<5?10: DateTime.Now.Second);
                 ConsoleEx.Write(true,"+++++++++++++++++++++++++++++++++\n");
                 Console.WriteLine((index--)+"+++++++++++++++++++++++++++++++++"+code.Code);
             }
         }
 
-        static void Output(IList<DayData> daysData, TopResult code)
+        static void Output(IList<DayData> daysData, TopResult code, string curPrice)
         {
             var dataProcess = new DataProcess();
             var dataArr = daysData.Select(x => x.Val).ToArray();
@@ -81,7 +81,17 @@ namespace TopRankCodeList
 
             ConsoleEx.Write(true, $"{code.Code} {code.Name}\n");
             ConsoleEx.Write(true, $"Max\tMin\tMean\n{max}\t{minium}\t{mean}\n");
-
+            try
+            {
+                var cur = Convert.ToDouble(curPrice);
+                var meanPrice = Convert.ToDouble(mean);
+                if (cur <= meanPrice) ConsoleEx.Write(true, "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+            }
+            catch
+            {
+               
+            }
+           
             var maxPoints = TargetMaxMin(daysData, max);
 
             ConsoleEx.Write(true, "Max:\t");
