@@ -55,6 +55,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Task\1\ExtractWeb.exe.config" />
+    <None Include="Task\1\ExtractWeb.vshost.exe.config" />
+    <None Include="Task\1\ExtractWeb.vshost.exe.manifest" />
+    <None Include="Task\2\ExtractWeb.exe.config" />
+    <None Include="Task\2\ExtractWeb.vshost.exe.config" />
+    <None Include="Task\2\ExtractWeb.vshost.exe.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Task\1\ExtractWeb.exe" />
+    <Content Include="Task\1\ExtractWeb.pdb" />
+    <Content Include="Task\1\ExtractWeb.vshost.exe" />
+    <Content Include="Task\1\HtmlAgilityPack.dll" />
+    <Content Include="Task\2\2017-10-12.txt" />
+    <Content Include="Task\2\2017-9-26.txt" />
+    <Content Include="Task\2\ExtractWeb.exe" />
+    <Content Include="Task\2\ExtractWeb.pdb" />
+    <Content Include="Task\2\ExtractWeb.vshost.exe" />
+    <Content Include="Task\2\HtmlAgilityPack.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
