@@ -11,6 +11,7 @@ namespace ExtractWeb
         static void Main(string[] args)
         {
             var url = ConfigurationManager.AppSettings["Url"];
+            var markLevel = ConfigurationManager.AppSettings["Level"];
             var task = Task.Factory.StartNew(()=> {
                 while (true)
                 {
@@ -33,6 +34,15 @@ namespace ExtractWeb
                             using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt", true))
                             {
                                 w.WriteLine($"{resVal} \t{resVal2}");
+                            }
+                            if (string.IsNullOrEmpty(markLevel) == false)
+                            {
+                                var levelPrice = Convert.ToDouble(markLevel);
+                                var gzRealTime = Convert.ToDouble(resVal);
+                                using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt", true))
+                                {
+                                    w.WriteLine($"{gzRealTime - levelPrice}");
+                                }
                             }
                         }
                        
