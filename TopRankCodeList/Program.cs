@@ -12,7 +12,7 @@ namespace TopRankCodeList
 {
     class ConsoleEx
     {
-        public static void Write(bool file,string txt)
+        public static void Write(bool file, string txt)
         {
             if (file)
                 using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.ToString("yyyy-MM-dd")}.txt", true))
@@ -51,7 +51,8 @@ namespace TopRankCodeList
                 codeList.AddRange(arr.Select(x => new TopResult { Code = x, Name = "" }));
             }
             Analyst(codeList);
-            LogMeanVal(codeList,1);
+            FilterAnalyst();
+            LogMeanVal(codeList, 1);
         }
 
         static void LogMeanVal(List<TopResult> codeList, int monthCnt)
@@ -62,7 +63,7 @@ namespace TopRankCodeList
             {
                 var queryUri = "&code={code}&page={page}&per={per}&sdate={sdate}&edate={edate}&rt=0." + DateTime.Now.Second + "2238" + DateTime.Now.Millisecond + "490954" + DateTime.Now.Second;
 
-                var sdate = DateTime.Now.AddMonths(-1* monthCnt).ToString("yyyy-MM-dd");
+                var sdate = DateTime.Now.AddMonths(-1 * monthCnt).ToString("yyyy-MM-dd");
                 var edate = DateTime.Now.ToString("yyyy-MM-dd");
                 var daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(sdate, edate);
 
@@ -132,15 +133,15 @@ namespace TopRankCodeList
             }
             catch
             {
-               
+
             }
-           
+
             var maxPoints = TargetMaxMin(daysData, max);
 
             ConsoleEx.Write(true, "\tMax:\t");
             foreach (var item in maxPoints)
             {
-                ConsoleEx.Write(true, "\t"+item.Date + " ");
+                ConsoleEx.Write(true, "\t" + item.Date + " ");
             }
             ConsoleEx.Write(true, "\n");
 
@@ -148,7 +149,7 @@ namespace TopRankCodeList
             ConsoleEx.Write(true, "\tMin:\t");
             foreach (var item in minPoints)
             {
-                ConsoleEx.Write(true, "\t"+item.Date + " ");
+                ConsoleEx.Write(true, "\t" + item.Date + " ");
             }
             ConsoleEx.Write(true, "\n");
             Thread.Sleep(2000);
@@ -162,6 +163,26 @@ namespace TopRankCodeList
                 if (item.Val == findValue) result.Add(item);
             }
             return result;
+        }
+
+        static void FilterAnalyst()
+        {
+            var text = string.Empty; 
+            using (var read = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.ToString("yyyy-MM-dd")}.txt", true))
+            {
+                text = read.ReadToEnd();
+            }
+            var arr = text.Split(new string[] { "+++++++++++++++++++++++++++++++++" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var item in arr)
+            {
+                if (item.Contains("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"))
+                {
+                    using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"Filter_{DateTime.Now.ToString("yyyy-MM-dd")}.txt", true))
+                    {
+                        w.WriteLine(item);
+                    }
+                }
+            }
         }
     }
 }
