@@ -25,53 +25,96 @@ namespace TopRankCodeList
     }
     class Program
     {
-        static void Main(string[] args)
+
+        static IList<TopResult> GetCodeList()
         {
             var url = ConfigurationManager.AppSettings["Url"];
-            var top = new TopRank(url);
+            var top = new TopRank1(url);
+            return top.GetCodeList().ToList();
+        }
+
+        static IList<TopResult> GetCodeList2()
+        {
+            return new TopRank2(ConfigurationManager.AppSettings["CodeSource2"]).GetCodeList().ToList();
+        }
+
+        static void Main(string[] args)
+        {
+
             var markcode = ConfigurationManager.AppSettings["MarkCode"];
             var codeList = new List<TopResult>();
             if (string.IsNullOrEmpty(markcode))
-            codeList = top.GetCodeList().ToList();
+                codeList = GetCodeList2().ToList();//GetCodeList().ToList()
             else
             {
                 var arr = markcode.Split(',');
                 codeList.AddRange(arr.Select(x => new TopResult { Code = x, Name = "" }));
             }
+            Analyst(codeList);
+            LogMeanVal(codeList,1);
+        }
 
+        static void LogMeanVal(List<TopResult> codeList, int monthCnt)
+        {
             var urlHistory = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz";
             var index = codeList.Count;
-            foreach(var code in codeList)
+            foreach (var code in codeList)
             {
-                var queryUri = "&code={code}&page={page}&per={per}&sdate={sdate}&edate={edate}&rt=0."+ DateTime.Now.Second + "2038"+ DateTime.Now.Millisecond+ "498954"+DateTime.Now.Second;
+                var queryUri = "&code={code}&page={page}&per={per}&sdate={sdate}&edate={edate}&rt=0." + DateTime.Now.Second + "2238" + DateTime.Now.Millisecond + "490954" + DateTime.Now.Second;
 
-                var sdate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
-                var edate = DateTime.Now.ToString("yyyy-MM-dd") ;
+                var sdate = DateTime.Now.AddMonths(-1* monthCnt).ToString("yyyy-MM-dd");
+                var edate = DateTime.Now.ToString("yyyy-MM-dd");
                 var daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(sdate, edate);
 
-                var resVal = ProcessWeb.GetHtmlElementById("gz_gsz", "http://fund.eastmoney.com/"+code.Code+".html");
-                ConsoleEx.Write(true, resVal);
-                ConsoleEx.Write(true," One Month\n");
-                Output(daysData, code, resVal);
+                var dataProcess = new DataProcess();
+                var dataArr = daysData.Select(x => x.Val).ToArray();
+                var minium = dataProcess.GetMinium(dataArr);
+                var max = dataProcess.GetMax(dataArr);
+                var mean = dataProcess.GetMean(dataArr);
 
-                daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-3).ToString("yyyy-MM-dd"), edate);
-                ConsoleEx.Write(true,"3 Month\n");
-                Output(daysData, code, resVal);
-
-                daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-6).ToString("yyyy-MM-dd"), edate);
-                ConsoleEx.Write(true, "6 Month\n");
-                Output(daysData, code, resVal);
-
-                daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-12).ToString("yyyy-MM-dd"), edate);
-                ConsoleEx.Write(true,"12 Month\n");
-                Output(daysData, code, resVal);
-                Thread.Sleep(1000*DateTime.Now.Second<5?10: DateTime.Now.Second);
-                ConsoleEx.Write(true,"+++++++++++++++++++++++++++++++++\n");
-                Console.WriteLine((index--)+"+++++++++++++++++++++++++++++++++"+code.Code);
+                using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"Mean_{DateTime.Now.ToString("yyyy-MM-dd")}.txt", true))
+                {
+                    w.WriteLine($"{code.Code} \t{mean}");
+                }
             }
         }
 
-        static void Output(IList<DayData> daysData, TopResult code, string curPrice)
+        static void Analyst(List<TopResult> codeList)
+        {
+            var urlHistory = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz";
+            var index = codeList.Count;
+            foreach (var code in codeList)
+            {
+                var resVal = ProcessWeb.GetHtmlElementById("gz_gsz", "http://fund.eastmoney.com/" + code.Code + ".html");
+                ConsoleEx.Write(true, resVal);
+
+                var queryUri = "&code={code}&page={page}&per={per}&sdate={sdate}&edate={edate}&rt=0." + DateTime.Now.Second + "2038" + DateTime.Now.Millisecond + "498954" + DateTime.Now.Second;
+
+                var sdate = DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd");
+                var edate = DateTime.Now.ToString("yyyy-MM-dd");
+
+                var daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(sdate, edate);
+                ConsoleEx.Write(true, " One Month\n");
+                Output(daysData, code, resVal, 1);
+
+                daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-3).ToString("yyyy-MM-dd"), edate);
+                ConsoleEx.Write(true, "3 Month\n");
+                Output(daysData, code, resVal, 3);
+
+                daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-6).ToString("yyyy-MM-dd"), edate);
+                ConsoleEx.Write(true, "6 Month\n");
+                Output(daysData, code, resVal, 6);
+
+                //daysData = new ExtractDayData(urlHistory, queryUri, code.Code).GetData(DateTime.Now.AddMonths(-12).ToString("yyyy-MM-dd"), edate);
+                //ConsoleEx.Write(true,"12 Month\n");
+                //Output(daysData, code, resVal);
+                //Thread.Sleep(1000*DateTime.Now.Second<5?10: DateTime.Now.Second);
+                ConsoleEx.Write(true, "+++++++++++++++++++++++++++++++++\n");
+                Console.WriteLine((index--) + "+++++++++++++++++++++++++++++++++" + code.Code);
+            }
+        }
+
+        static void Output(IList<DayData> daysData, TopResult code, string curPrice, int flag)
         {
             var dataProcess = new DataProcess();
             var dataArr = daysData.Select(x => x.Val).ToArray();
@@ -80,12 +123,12 @@ namespace TopRankCodeList
             var mean = dataProcess.GetMean(dataArr);
 
             ConsoleEx.Write(true, $"{code.Code} {code.Name}\n");
-            ConsoleEx.Write(true, $"Max\tMin\tMean\n{max}\t{minium}\t{mean}\n");
+            ConsoleEx.Write(true, $"\tMax\tMin\tMean\n\t{max}\t{minium}\t{mean}\n");
             try
             {
                 var cur = Convert.ToDouble(curPrice);
                 var meanPrice = Convert.ToDouble(mean);
-                if (cur <= meanPrice) ConsoleEx.Write(true, "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+                if (cur <= meanPrice) ConsoleEx.Write(true, "\tTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ");
             }
             catch
             {
@@ -94,18 +137,18 @@ namespace TopRankCodeList
            
             var maxPoints = TargetMaxMin(daysData, max);
 
-            ConsoleEx.Write(true, "Max:\t");
+            ConsoleEx.Write(true, "\tMax:\t");
             foreach (var item in maxPoints)
             {
-                ConsoleEx.Write(true, item.Date + " ");
+                ConsoleEx.Write(true, "\t"+item.Date + " ");
             }
             ConsoleEx.Write(true, "\n");
 
             var minPoints = TargetMaxMin(daysData, minium);
-            ConsoleEx.Write(true, "Min:\t");
+            ConsoleEx.Write(true, "\tMin:\t");
             foreach (var item in minPoints)
             {
-                ConsoleEx.Write(true, item.Date + " ");
+                ConsoleEx.Write(true, "\t"+item.Date + " ");
             }
             ConsoleEx.Write(true, "\n");
             Thread.Sleep(2000);
