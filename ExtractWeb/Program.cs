@@ -12,6 +12,8 @@ namespace ExtractWeb
         {
             var url = ConfigurationManager.AppSettings["Url"];
             var markLevel = ConfigurationManager.AppSettings["Level"];
+            var code = ConfigurationManager.AppSettings["Code"];
+            url = url.Replace("{code}", code);
             var task = Task.Factory.StartNew(()=> {
                 while (true)
                 {
@@ -49,10 +51,10 @@ namespace ExtractWeb
                     }
                     catch(Exception ex)
                     {
-                        Thread.Sleep(6000 * 10);
+                        Console.WriteLine("There are some error");
                     }
                     
-                    Thread.Sleep(6000*5);
+                    Thread.Sleep(6000);
                 }
             });
            

@@ -25,7 +25,7 @@ namespace ExtractWeb
             }
             catch
             {
-                Thread.Sleep(1000 * (10 + DateTime.Now.Second));
+                Thread.Sleep(5000);
                 return GetHtmlElementById(elementId, url);
             }
             
