@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnalystLib;
+using System;
 using System.Configuration;
 using System.IO;
 using System.Threading;
@@ -8,12 +9,35 @@ namespace ExtractWeb
 {
     class Program
     {
+        static GZHistory Prepare(string code)
+        {
+            var urlHistory = "http://fund.eastmoney.com/f10/F10DataApi.aspx?type=lsjz";
+            var queryUri = "&code={code}&page={page}&per={per}&sdate={sdate}&edate={edate}&rt=0." + DateTime.Now.Second + "2038" + DateTime.Now.Millisecond + "498954" + DateTime.Now.Second;
+            var his = new GZStatistic(code, urlHistory);
+            try
+            {
+                var result = his.GetHistory(queryUri);
+                using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt", true))
+                {
+                    w.WriteLine($"max: {result.Max} \tmin: {result.Min} \tmean:{result.Mean}");
+                }
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+           
+        }
         static void Main(string[] args)
         {
             var url = ConfigurationManager.AppSettings["Url"];
             var markLevel = ConfigurationManager.AppSettings["Level"];
             var code = ConfigurationManager.AppSettings["Code"];
             url = url.Replace("{code}", code);
+
+            var gzHis = Prepare(code);
+
             var task = Task.Factory.StartNew(()=> {
                 while (true)
                 {
@@ -37,13 +61,24 @@ namespace ExtractWeb
                             {
                                 w.WriteLine($"{resVal} \t{resVal2}");
                             }
+                            var gzRealTime = Convert.ToDouble(resVal);
                             if (string.IsNullOrEmpty(markLevel) == false)
                             {
                                 var levelPrice = Convert.ToDouble(markLevel);
-                                var gzRealTime = Convert.ToDouble(resVal);
+                               
                                 using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt", true))
                                 {
-                                    w.WriteLine($"{gzRealTime - levelPrice}");
+                                    w.WriteLine($"level: {gzRealTime - levelPrice}");
+                                }
+                            }
+
+                            if (gzHis != null)
+                            {
+                                using (var w = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt", true))
+                                {
+                                    w.WriteLine($"mean: {gzRealTime - gzHis.Mean}");
+                                    w.WriteLine($"min: {gzRealTime - gzHis.Min}");
+                                    w.WriteLine($"mean: {gzRealTime - gzHis.Max}");
                                 }
                             }
                         }
