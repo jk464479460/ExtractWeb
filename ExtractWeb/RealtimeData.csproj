@@ -69,6 +69,12 @@
     <None Include="Task\3\ExtractWeb.exe.config" />
     <None Include="Task\3\ExtractWeb.vshost.exe.config" />
     <None Include="Task\3\ExtractWeb.vshost.exe.manifest" />
+    <None Include="Task\dai\huifutian\ExtractWeb.exe.config" />
+    <None Include="Task\dai\huifutian\ExtractWeb.vshost.exe.config" />
+    <None Include="Task\dai\huifutian\ExtractWeb.vshost.exe.manifest" />
+    <None Include="Task\dai\wanjiaxinxing\ExtractWeb.exe.config" />
+    <None Include="Task\dai\wanjiaxinxing\ExtractWeb.vshost.exe.config" />
+    <None Include="Task\dai\wanjiaxinxing\ExtractWeb.vshost.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Task\1\ExtractWeb.exe" />
@@ -93,6 +99,30 @@
     <Content Include="Task\3\MathNet.Numerics.xml" />
     <Content Include="Task\3\Newtonsoft.Json.dll" />
     <Content Include="Task\3\Newtonsoft.Json.xml" />
+    <Content Include="Task\dai\huifutian\AnalystLib.dll" />
+    <Content Include="Task\dai\huifutian\AnalystLib.pdb" />
+    <Content Include="Task\dai\huifutian\DataStatistics.dll" />
+    <Content Include="Task\dai\huifutian\DataStatistics.pdb" />
+    <Content Include="Task\dai\huifutian\ExtractWeb.exe" />
+    <Content Include="Task\dai\huifutian\ExtractWeb.pdb" />
+    <Content Include="Task\dai\huifutian\ExtractWeb.vshost.exe" />
+    <Content Include="Task\dai\huifutian\HtmlAgilityPack.dll" />
+    <Content Include="Task\dai\huifutian\MathNet.Numerics.dll" />
+    <Content Include="Task\dai\huifutian\MathNet.Numerics.xml" />
+    <Content Include="Task\dai\huifutian\Newtonsoft.Json.dll" />
+    <Content Include="Task\dai\huifutian\Newtonsoft.Json.xml" />
+    <Content Include="Task\dai\wanjiaxinxing\AnalystLib.dll" />
+    <Content Include="Task\dai\wanjiaxinxing\AnalystLib.pdb" />
+    <Content Include="Task\dai\wanjiaxinxing\DataStatistics.dll" />
+    <Content Include="Task\dai\wanjiaxinxing\DataStatistics.pdb" />
+    <Content Include="Task\dai\wanjiaxinxing\ExtractWeb.exe" />
+    <Content Include="Task\dai\wanjiaxinxing\ExtractWeb.pdb" />
+    <Content Include="Task\dai\wanjiaxinxing\ExtractWeb.vshost.exe" />
+    <Content Include="Task\dai\wanjiaxinxing\HtmlAgilityPack.dll" />
+    <Content Include="Task\dai\wanjiaxinxing\MathNet.Numerics.dll" />
+    <Content Include="Task\dai\wanjiaxinxing\MathNet.Numerics.xml" />
+    <Content Include="Task\dai\wanjiaxinxing\Newtonsoft.Json.dll" />
+    <Content Include="Task\dai\wanjiaxinxing\Newtonsoft.Json.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AnalystLib\AnalystLib.csproj">
