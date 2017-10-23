@@ -34,8 +34,7 @@ namespace ExtractWeb
             var url = ConfigurationManager.AppSettings["Url"];
             var markLevel = ConfigurationManager.AppSettings["Level"];
             var code = ConfigurationManager.AppSettings["Code"];
-            url = url.Replace("{code}", code);
-
+            
             var gzHis = Prepare(code);
 
             var task = Task.Factory.StartNew(()=> {
@@ -44,8 +43,9 @@ namespace ExtractWeb
                     var logIt = true;
                     try
                     {
-                        var resVal = ProcessWeb.GetHtmlElementById("gz_gsz", url);
-                        var resVal2 = ProcessWeb.GetHtmlElementById("gz_gztime", url);
+                        var gsjz = ProcessWeb.GetGSZByClass(code);
+                        var resVal = gsjz.Datas[0].gsz;//ProcessWeb.GetHtmlElementById("gz_gsz", url);
+                        var resVal2 = gsjz.Datas[0].gztime;//ProcessWeb.GetHtmlElementById("gz_gztime", url);
                         if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt"))
                         using (var reader = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}.txt"))
                         {
@@ -78,7 +78,7 @@ namespace ExtractWeb
                                 {
                                     w.WriteLine($"mean: {gzRealTime - gzHis.Mean}");
                                     w.WriteLine($"min: {gzRealTime - gzHis.Min}");
-                                    w.WriteLine($"mean: {gzRealTime - gzHis.Max}");
+                                    w.WriteLine($"max: {gzRealTime - gzHis.Max}");
                                 }
                             }
                         }
