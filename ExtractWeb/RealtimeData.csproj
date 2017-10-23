@@ -66,6 +66,9 @@
     <None Include="Task\2\ExtractWeb.exe.config" />
     <None Include="Task\2\ExtractWeb.vshost.exe.config" />
     <None Include="Task\2\ExtractWeb.vshost.exe.manifest" />
+    <None Include="Task\3\ExtractWeb.exe.config" />
+    <None Include="Task\3\ExtractWeb.vshost.exe.config" />
+    <None Include="Task\3\ExtractWeb.vshost.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Task\1\ExtractWeb.exe" />
@@ -78,6 +81,18 @@
     <Content Include="Task\2\ExtractWeb.pdb" />
     <Content Include="Task\2\ExtractWeb.vshost.exe" />
     <Content Include="Task\2\HtmlAgilityPack.dll" />
+    <Content Include="Task\3\AnalystLib.dll" />
+    <Content Include="Task\3\AnalystLib.pdb" />
+    <Content Include="Task\3\DataStatistics.dll" />
+    <Content Include="Task\3\DataStatistics.pdb" />
+    <Content Include="Task\3\ExtractWeb.exe" />
+    <Content Include="Task\3\ExtractWeb.pdb" />
+    <Content Include="Task\3\ExtractWeb.vshost.exe" />
+    <Content Include="Task\3\HtmlAgilityPack.dll" />
+    <Content Include="Task\3\MathNet.Numerics.dll" />
+    <Content Include="Task\3\MathNet.Numerics.xml" />
+    <Content Include="Task\3\Newtonsoft.Json.dll" />
+    <Content Include="Task\3\Newtonsoft.Json.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AnalystLib\AnalystLib.csproj">
